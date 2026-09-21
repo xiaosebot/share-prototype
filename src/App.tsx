@@ -4,6 +4,7 @@ import { ShareCreatePage } from './pages/ShareCreatePage';
 import { AppShareCreatePage } from './pages/AppShareCreatePage';
 import { ShareSuccessPage } from './pages/ShareSuccessPage';
 import { PrototypeStatePanel, type DemoScreen } from './components/PrototypeStatePanel';
+import { PrototypeAccessGate } from './components/PrototypeAccessGate';
 import type { ShareConfig, StorageScope, Platform } from './mock/shareMock';
 import { defaultTrafficRules, editConfig, profiles, selectedFiles, systemConfig } from './mock/shareMock';
 import type { BatchItem } from './components/BatchResult';
@@ -50,10 +51,10 @@ export default function App() {
   };
   const back = () => { setScreen('create'); setDesktopOpen(true); };
 
-  return <div className="prototype-layout">
+  return <PrototypeAccessGate><div className="prototype-layout">
     {platform === 'web' ? <>{screen === 'create' && <ShareCreatePage open={desktopOpen} config={config} profile={profile} scope={scope} mode={mode} onChange={patch} onOpen={() => setDesktopOpen(true)} onClose={() => setDesktopOpen(false)} onSingle={single} onBatch={() => batchCreate(true)}/>}
       {screen !== 'create' && <><ShareCreatePage open={false} config={config} profile={profile} scope={scope} mode={mode} onChange={patch} onOpen={back} onClose={() => {}} onSingle={single} onBatch={() => batchCreate(true)}/><Modal open={desktopOpen} footer={null} width={screen === 'success' ? 860 : 940} onCancel={back} className="result-modal" centered><ShareSuccessPage mode={screen === 'success' ? 'success' : 'batch'} config={resultConfig} profile={profile} scope={scope} mobile={false} results={batch} onBack={back} onRetry={retry}/></Modal></>}
     </> : <div className="mobile-stage"><div className="phone-shell">{screen === 'create' ? <AppShareCreatePage config={config} profile={profile} scope={scope} mode={mode} onChange={patch} onSingle={single} onBatch={() => batchCreate(true)} onBack={() => {}}/> : <ShareSuccessPage mode={screen === 'success' ? 'success' : 'batch'} config={resultConfig} profile={profile} scope={scope} mobile results={batch} onBack={back} onRetry={retry}/>}</div></div>}
     <aside className="prototype-dock"><PrototypeStatePanel platform={platform} screen={screen} mode={mode} profileUid={profile.uid} profiles={profiles} onPlatform={changePlatform} onScreen={changeScreen} onMode={changeMode} onProfile={changeProfile} onReset={() => reset(platform, 'create', profile, true)}/></aside>
-  </div>;
+  </div></PrototypeAccessGate>;
 }
