@@ -2,7 +2,7 @@ export type TrafficRule = { id: string; target?: 'link' | 'ip'; period?: 'day' |
 export type ShareConfig = {
   title: string; expiryEnabled: boolean; expiryType: string; expiryAt?: string; passwordEnabled: boolean; password: string; passwordSource?: 'manual' | 'random';
   paidEnabled: boolean; price?: number; specifiedEnabled: boolean; uids: string[]; trafficEnabled: boolean; trafficRules: TrafficRule[];
-  downloadPriceEnabled: boolean; downloadPrice?: number; domain: string; shareCreatedAt?: string;
+  downloadPriceEnabled: boolean; downloadPrice?: number; shareCreatedAt?: string;
 };
 export type Platform = 'web' | 'app';
 export type StorageScope = { uid: string; platform: Platform };
@@ -16,16 +16,19 @@ export const profiles: MockProfile[] = [
   { uid: '100005', label: '特殊推广用户 · 后台配置最低价', eligible: true, customDomains: ['share.example.com'], minPrice: 0.05, commission: 15, member: true, nickname: '小明' },
 ];
 export const selectedFiles = ['学习资料', '年度报告.pdf', '工作文档', '产品方案.pptx', '旅行照片', '设计规范.pdf', '会议纪要.docx', '项目排期.xlsx', '视频素材', '合同模板.docx'];
-export const domains = [{ value: 'official', label: '官方域名' }, { value: 'share.example.com', label: 'share.example.com' }, { value: 'download.example.com', label: 'download.example.com' }];
 export const defaultTrafficRules: TrafficRule[] = [
   { id: 'rule-ip-day', target: 'ip', period: 'day', amount: 2, unit: 'GB' },
   { id: 'rule-link-total', target: 'link', period: 'total', amount: 100, unit: 'GB' },
 ];
-export const systemConfig: ShareConfig = { title: '', expiryEnabled: false, expiryType: '7d', passwordEnabled: false, password: '', passwordSource: 'manual', paidEnabled: false, specifiedEnabled: false, uids: [], trafficEnabled: false, trafficRules: [], downloadPriceEnabled: false, domain: 'official' };
-export const editConfig: ShareConfig = { ...systemConfig, title: '2026 年学习资料', shareCreatedAt: '2026-09-10T10:00:00+08:00', expiryEnabled: true, expiryType: '15d', expiryAt: '2026-09-25T10:00:00+08:00', passwordEnabled: true, password: 'ABCD', paidEnabled: true, price: 29.9, specifiedEnabled: true, uids: ['167827183', '123232334'], trafficEnabled: true, trafficRules: defaultTrafficRules, downloadPriceEnabled: true, downloadPrice: 0.8, domain: 'share.example.com' };
+export const systemConfig: ShareConfig = { title: '', expiryEnabled: false, expiryType: '7d', passwordEnabled: false, password: '', passwordSource: 'manual', paidEnabled: false, specifiedEnabled: false, uids: [], trafficEnabled: false, trafficRules: [], downloadPriceEnabled: false };
+export const editConfig: ShareConfig = { ...systemConfig, title: '2026 年学习资料', shareCreatedAt: '2026-09-10T10:00:00+08:00', expiryEnabled: true, expiryType: '15d', expiryAt: '2026-09-25T10:00:00+08:00', passwordEnabled: true, password: 'ABCD', paidEnabled: true, price: 29.9, specifiedEnabled: true, uids: ['167827183', '123232334'], trafficEnabled: true, trafficRules: defaultTrafficRules, downloadPriceEnabled: true, downloadPrice: 0.8 };
 export const newRule = (): TrafficRule => ({ id: crypto.randomUUID(), unit: 'GB' });
 export const mockUsers = [
   { phone: '13800138000', uid: '167827183' }, { phone: '13900139000', uid: '123232334' },
   { phone: '13700137000', uid: '162337183' }, { phone: '13600136000', uid: '167454567' },
+  { phone: '13500135000', uid: '175230001' }, { phone: '13400134000', uid: '175230002' },
+  { phone: '13300133000', uid: '175230003' }, { phone: '13200132000', uid: '175230004' },
+  { phone: '13100131000', uid: '175230005' }, { phone: '13000130000', uid: '175230006' },
+  { phone: '18900189000', uid: '175230007' },
 ];
 export const queryMockUid = (input: string) => mockUsers.find(user => user.uid === input.trim() || user.phone === input.trim())?.uid;

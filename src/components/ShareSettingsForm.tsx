@@ -4,7 +4,6 @@ import type { MockProfile, ShareConfig } from '../mock/shareMock';
 import type { PasswordHistory } from '../utils/shareConfigStorage';
 import { addPasswordHistory } from '../utils/shareConfigStorage';
 import { validPassword } from '../utils/shareRules';
-import { DomainSetting } from './DomainSetting';
 import { DownloadPriceSetting } from './DownloadPriceSetting';
 import { ExpirySetting } from './ExpirySetting';
 import { FieldHint } from './FieldHint';
@@ -21,7 +20,7 @@ export function ShareSettingsForm({ config, profile, history, mobile, mode, erro
   const updatePassword = (patch: Partial<{ enabled: boolean; password: string; source: 'manual' | 'random' }>) => {
     const nextPassword = patch.password ?? config.password;
     onChange({ passwordEnabled: patch.enabled ?? config.passwordEnabled, password: nextPassword, passwordSource: patch.source ?? config.passwordSource });
-    if (validPassword(nextPassword)) onHistory(addPasswordHistory(history, nextPassword));
+    if (patch.source === 'manual' && validPassword(nextPassword)) onHistory(addPasswordHistory(history, nextPassword));
   };
   return <div className={mobile ? 'settings-form mobile-settings-form' : 'settings-form'}>
     <section className="setting-group title-setting">
@@ -34,7 +33,6 @@ export function ShareSettingsForm({ config, profile, history, mobile, mode, erro
     <SpecifiedUserSetting mobile={mobile} enabled={config.specifiedEnabled} uids={config.uids} onChange={v => onChange({ specifiedEnabled: v.enabled ?? config.specifiedEnabled, uids: v.uids ?? config.uids })}/>
     <TrafficLimitSetting mobile={mobile} enabled={config.trafficEnabled} rules={config.trafficRules} onChange={v => onChange({ trafficEnabled: v.enabled ?? config.trafficEnabled, trafficRules: v.rules ?? config.trafficRules })}/>
     <DownloadPriceSetting mobile={mobile} config={config} profile={profile} onChange={onChange}/>
-    <DomainSetting value={config.domain} customDomains={profile.customDomains} onChange={domain => onChange({ domain })}/>
     {!!errors.length && <Alert className="form-errors" type="error" showIcon message={errors[0]} description={errors.length > 1 ? errors.slice(1).join('；') : undefined}/>} 
   </div>;
 }

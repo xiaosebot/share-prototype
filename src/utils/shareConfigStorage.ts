@@ -19,8 +19,14 @@ export const rememberValidConfig = (scope: StorageScope, c: ShareConfig, minPric
   if (!c.paidEnabled || validPrice(c.price, 1, 9999)) Object.assign(saved, { paidEnabled: c.paidEnabled, price: c.price });
   if (!c.specifiedEnabled || c.uids.length > 0) Object.assign(saved, { specifiedEnabled: c.specifiedEnabled, uids: c.uids });
   if (!c.trafficEnabled || validRules(c.trafficRules)) Object.assign(saved, { trafficEnabled: c.trafficEnabled, ...(validRules(c.trafficRules) ? { trafficRules: c.trafficRules } : {}) });
-  if (!c.downloadPriceEnabled || validPrice(c.downloadPrice, minPrice, 2)) Object.assign(saved, { downloadPriceEnabled: c.downloadPriceEnabled, downloadPrice: c.downloadPrice });
-  saved.domain = c.domain;
+  if (!c.downloadPriceEnabled) {
+    saved.downloadPriceEnabled = false;
+    delete saved.downloadPrice;
+  } else if (validPrice(c.downloadPrice, minPrice, 2)) {
+    Object.assign(saved, { downloadPriceEnabled: true, downloadPrice: c.downloadPrice });
+  }
+  // 清理旧版本曾写入的域名；域名自 v2.4 起不属于 share 配置。
+  delete (saved as Partial<ShareConfig> & { domain?: string }).domain;
   return write(scope, 'config', saved);
 };
 export type PasswordHistory = { value: string; isDefault?: boolean; lastUsedAt?: number }[];

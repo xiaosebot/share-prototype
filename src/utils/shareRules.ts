@@ -18,8 +18,10 @@ export function validateConfig(c: ShareConfig, p: MockProfile, editing = false):
   if (p.eligible && c.downloadPriceEnabled && !validPrice(c.downloadPrice, p.minPrice, 2)) errors.push(`下载单价范围为 ${p.minPrice.toFixed(2)}–2.00 元/GB`);
   return errors;
 }
-export const commissionTip = (c: ShareConfig, p: MockProfile) => c.paidEnabled ? '资源收费分享的下载付费暂不参与推广分佣。' : `当前分佣比例：${p.commission}%`;
-export const makeShareUrl = (domain: string, id: string) => `https://${domain === 'official' ? 'www.123pan.com' : domain}/s/${id}`;
+export const commissionTip = (c: ShareConfig, p: MockProfile) => c.paidEnabled
+  ? `当前分佣比例：${p.commission}%；资源收费分享的下载付费暂不参与推广分佣。`
+  : `当前分佣比例：${p.commission}%`;
+export const makeShareUrl = (domain: string, id: string) => `https://${domain === 'official' ? 'www.123pan.com' : domain === 'backup' ? 'share.123pan.com' : domain}/s/${id}`;
 export const withPassword = (url: string, password: string, auto: boolean) => auto && password ? `${url}?pwd=${encodeURIComponent(password)}` : url;
 export const phraseTemplate = (s: PhraseSettings, hasPassword: boolean) => `『来自123云盘${s.member ? '会员' : '用户'}${s.nickname ? '「{分享人昵称}」' : ''}的分享』${s.title ? '\n{分享标题}' : ''}\n分享链接：{分享链接}${s.password && hasPassword ? '\n提取密码：{提取密码}' : ''}`;
 export const renderPhrase = (template: string, values: Record<string, string>) => template.replace(/\{(会员身份|分享标题|分享链接|提取密码|分享人昵称)\}/g, (_, key: string) => values[key] ?? '');
